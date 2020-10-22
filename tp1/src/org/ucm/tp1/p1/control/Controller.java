@@ -34,6 +34,7 @@ public class Controller {
    	 System.out.println(game);
    }
     
+    
     public void run() {
     	while(!game.checkFinish()) {
     	game.update();
@@ -44,7 +45,7 @@ public class Controller {
     	else
     		System.out.println("Player wins");
     }
-		// TODO fill your code
+		
     
 
 
@@ -55,10 +56,14 @@ private void userCommand() {
 	String getLine = scanner.nextLine().trim().toLowerCase();
 	String[] words = getLine.split(" +");
 	if (words[0].equalsIgnoreCase("add") || words[0].equalsIgnoreCase("a")) {
-		int x = Integer.parseInt(words[1]);
-		int y = Integer.parseInt(words[2]);
-		if(!game.addSlayer(x, y, game))
-			userCommand();
+		if(words.length == 3) {
+			int x = Integer.parseInt(words[1]);
+			int y = Integer.parseInt(words[2]);
+			if(!game.addSlayer(x, y, game))
+				userCommand();
+		}
+		else
+			System.out.println(invalidCommandMsg);
 		
 	}
 	else if (words[0].equalsIgnoreCase("help") || words[0].equalsIgnoreCase("h")) {

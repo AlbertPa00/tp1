@@ -12,6 +12,14 @@ public class BuffyVampireSlayer {
 		public static final String seedIsNumberMsg = "the seed must be a number";
 		public static final String seedInfoMsg = "Random generator initialized with seed: ";
 
+	/**
+	 * Clase Main de BuffyVampireSlayer que toma los argumentos del juego y la seed de los numeros aleatorios
+	 * y 
+	 * 
+	 * @param args Level Seed
+	 * 			Level: es el nivel al que se quiere jugar, puede ser EASY, HARD e INSANE
+	 * 			Seed: es la semilla para los numeros aleatorios, puede ser cualquier Long
+	 */
 	public static void main(String[] args) {
 		if (args.length < 1 || args.length > 2)
 			System.out.print(usageMsg);

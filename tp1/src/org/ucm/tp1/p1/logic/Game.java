@@ -25,16 +25,15 @@ public class Game {
 	Random rand;
 	private Player player;
 	
-	private VampireList vampireList;
-	private SlayerList slayerList;
+	
+	private GameObjectBoard gameObjects;
 	
 	public Game(long seed, Level level) {
 		this.seed = seed;
 		this.rand = new Random(seed);
 		this.level = level;
 		this.lost = false;
-		this.vampireList= new VampireList();
-		this.slayerList= new SlayerList();
+		this.gameObjects = new GameObjectBoard();
 		this.player = new Player(rand);
 		this.vampsOnBoard = 0;
 		this.puntuacion = 0;
@@ -43,28 +42,29 @@ public class Game {
 		this.remainingVampires=level.getNumberOfVampires();
 		this.gamePrinter =new GamePrinter(this,level.getDim_x(),level.getDim_y());
 		
-		
 	}
 	
 	 public void update() {		
 		 ciclos++;
 		 updatePlayer();
-		 vampireList.move(this);
-		 slayerList.attack(this);
-		 vampireList.removeDead();
-		 vampireList.attack(this);
+		 //gameObjects.getVampireList();
+		 //gameObjects.getSlayerList();
+		 gameObjects.getVampireList().move(this);
+		 gameObjects.getSlayerList().attack(this);
+		 gameObjects.getVampireList().removeDead();
+		 gameObjects.getVampireList().attack(this);
 		 addVampire(this);
 		 gamePrinter.draw();
 		 
 	 }
 	public boolean posIsEmpty(int x, int y)
 	{
-		return (vampireList.isPositionEmpty(x, y) && slayerList.isPositionEmpty(x, y));
+		return (gameObjects.getVampireList().isPositionEmpty(x, y) && gameObjects.getSlayerList().isPositionEmpty(x, y));
 	}
 	public boolean checkFinish() {
 		updateVampsOnBoard();
 		for(int i=0;i<level.getDim_y();i++) {
-			if (!vampireList.isPositionEmpty(i,-1)) {
+			if (!gameObjects.getVampireList().isPositionEmpty(i,-1)) {
 				lost=true;
 				return true;
 			}
@@ -76,18 +76,18 @@ public class Game {
 	public void addVampire(Game game) {
 		double n= rand.nextDouble();
 		if(n < level.getVampireFrequency() && remainingVampires!=0) {
-			int x=getRandomZombieStart();
+			int x=getRandomVampireStart();
 			int y=level.getDim_x()-1;
 			if(posIsEmpty(x,y)) {			
-				vampireList.addVampire(x, y,game);
+				gameObjects.getVampireList().addVampire(x, y,game);
 				vampsOnBoard = getVampOnBoard() + 1;
 				remainingVampires--;}			
 		}
 	}
 	public boolean addSlayer(int x , int y,Game game) {
-		if(posIsEmpty(x,y) && player.getCoins()>=Slayer.cost) {
+		if(posIsEmpty(x,y) && player.getCoins()>=Slayer.cost && (x >= 0 && x <= level.getDim_x()) && (y >= 0 && y <= level.getDim_y())) {
 			player.wasteCoins(Slayer.cost);	
-			slayerList.add(x, y, game);					
+			gameObjects.getSlayerList().add(x, y, game);					
 			return true;
 		}
 		return false;
@@ -97,17 +97,17 @@ public class Game {
 		Vampire v=null;
 		Slayer s=null;
 		String code;
-		if (!vampireList.isPositionEmpty(x, y)) {
-			v=vampireList.getObjectInPosition(x, y);
+		if (!gameObjects.getVampireList().isPositionEmpty(x, y)) {
+			v=gameObjects.getVampireList().getObjectInPosition(x, y);
 			code = v.toString();
 		}		
 		else{
-			s=slayerList.getObjectInPosition(x, y);
+			s=gameObjects.getSlayerList().getObjectInPosition(x, y);
 			code=s.toString();
 		}
 		return code;
 	}
-	public int getRandomZombieStart() {
+	public int getRandomVampireStart() {
 		int x;
 		x= rand.nextInt(level.getDim_y());
 		return x;
@@ -116,13 +116,13 @@ public class Game {
 		return lost;
 	}
 	public void vampireAttacks(int x, int y, int damage){
-		slayerList.decreaseLife(x, y, damage);
+		gameObjects.getSlayerList().decreaseLife(x, y, damage);
 		
 	}
 	public void slayerAttacks(int x, int y, int damage){
 		for(int i=y+1;i<level.getDim_x();i++)
-			if(vampireList.getObjectInPosition(x, i)!=null)
-				vampireList.decreaseLife(x, i, damage);;
+			if(gameObjects.getVampireList().getObjectInPosition(x, i)!=null)
+				gameObjects.getVampireList().decreaseLife(x, i, damage);;
 		
 		
 	}
@@ -155,7 +155,7 @@ public class Game {
 		this.lost = lost;
 	}
 	private void updateVampsOnBoard() {
-		this.vampsOnBoard = vampireList.getContador();
+		this.vampsOnBoard = gameObjects.getVampireList().getContador();
 	}
 	private void updatePlayer() {
 		player.receiveCoins();
