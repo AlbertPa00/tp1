@@ -3,19 +3,20 @@ package org.ucm.tp1.p1.logic.newobjects;
 import org.ucm.tp1.p1.logic.Game;
 public class Slayer {
 	
+	public static final int cost=50 ;
+	
 	private int x,y;
 	private int life;
-	public static final int cost=50 ;
-	private Game game;
 	private int resistance;
 	private int frequency;
 	private int harm;
 	
+	private Game game;
 	
 	public Slayer(int x, int y,Game game) {
 		this.x=x;
 		this.y=y;
-		this.life=20;
+		this.life=3;
 		this.resistance=3;
 		this.frequency=1;
 		this.harm=1;
@@ -23,6 +24,12 @@ public class Slayer {
 		
 	}
 	
+	public Boolean isAlive() {
+		return(life>0);
+	}
+	public void decreaseLife(int damage) {
+	life=life-damage;	
+	}
 
 	public int getX() {
 		return x;
@@ -62,12 +69,7 @@ public class Slayer {
 	public void setHarm(int harm) {
 		this.harm = harm;
 	}
-	public Boolean isAlive() {
-		return(life>0);
-	}
-	public void decreaseLife(int damage) {
-	life=life-damage;	
-	}
+
 	
 	public String toString() {
 		String full;

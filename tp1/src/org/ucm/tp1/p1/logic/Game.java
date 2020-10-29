@@ -29,33 +29,30 @@ public class Game {
 	private GameObjectBoard gameObjects;
 	
 	public Game(long seed, Level level) {
+		this.level = level;
 		this.seed = seed;
 		this.rand = new Random(seed);
-		this.level = level;
+		
 		this.lost = false;
 		this.gameObjects = new GameObjectBoard();
 		this.player = new Player(rand);
 		this.vampsOnBoard = 0;
 		this.puntuacion = 0;
-		this.ciclos = -1;
+		this.ciclos = 0;
 		this.coins= player.getCoins();
 		this.remainingVampires=level.getNumberOfVampires();
 		this.gamePrinter =new GamePrinter(this,level.getDim_x(),level.getDim_y());
 		
 	}
 	
-	 public void update() {		
-		 ciclos++;
+	 public void update() {
+		 
 		 updatePlayer();
-		 //gameObjects.getVampireList();
-		 //gameObjects.getSlayerList();
-		 gameObjects.getVampireList().move(this);
-		 gameObjects.getSlayerList().attack(this);
-		 gameObjects.getVampireList().removeDead();
-		 gameObjects.getVampireList().attack(this);
+		 updateGameObjectBoard();
+		 ciclos++;
 		 addVampire(this);
 		 gamePrinter.draw();
-		 
+		 	 
 	 }
 	public boolean posIsEmpty(int x, int y)
 	{
@@ -84,7 +81,7 @@ public class Game {
 				remainingVampires--;}			
 		}
 	}
-	public boolean addSlayer(int x , int y,Game game) {
+	public boolean addSlayer(int y , int x,Game game) {
 		if(posIsEmpty(x,y) && player.getCoins()>=Slayer.cost && (x >= 0 && x <= level.getDim_x()) && (y >= 0 && y <= level.getDim_y())) {
 			player.wasteCoins(Slayer.cost);	
 			gameObjects.getSlayerList().add(x, y, game);					
@@ -121,8 +118,10 @@ public class Game {
 	}
 	public void slayerAttacks(int x, int y, int damage){
 		for(int i=y+1;i<level.getDim_x();i++)
-			if(gameObjects.getVampireList().getObjectInPosition(x, i)!=null)
-				gameObjects.getVampireList().decreaseLife(x, i, damage);;
+			if(gameObjects.getVampireList().getObjectInPosition(x, i)!=null) {
+				gameObjects.getVampireList().decreaseLife(x, i, damage);
+				i=level.getDim_x();
+				}
 		
 		
 	}
@@ -156,6 +155,12 @@ public class Game {
 	}
 	private void updateVampsOnBoard() {
 		this.vampsOnBoard = gameObjects.getVampireList().getContador();
+	}
+	private void updateGameObjectBoard() {
+		 gameObjects.getVampireList().move(this);
+		 gameObjects.getSlayerList().attack(this);
+		 gameObjects.getVampireList().removeDead();
+		 gameObjects.getVampireList().attack(this);
 	}
 	private void updatePlayer() {
 		player.receiveCoins();

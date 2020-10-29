@@ -16,6 +16,7 @@ public class GamePrinter {
 		this.numRows = rows;
 		this.numCols = cols;
 		board= new String[rows][cols];
+		draw();
 
 
 	}

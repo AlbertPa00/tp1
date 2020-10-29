@@ -9,15 +9,15 @@ public class SlayerList {
 		slayerList= new Slayer[50];
 		this.contador=0;
 	}
+	 
 	public void add(int x,int y,Game game) {
 		Slayer sla=new Slayer(x,y,game);
 		slayerList[contador]=sla;
 		contador++;
 	}
-	public void attack(Game game) {//completar cuando acabe vampirelist
+	public void attack(Game game) {
 			for(int i=0;i<contador;i++){
-				for(int w=0;w<slayerList[i].getFrequency();w++) 
-					
+				for(int w=0;w<slayerList[i].getFrequency();w++) 					
 					game.slayerAttacks(slayerList[i].getX(),slayerList[i].getY(), slayerList[i].getHarm());
 			
 		} 

@@ -4,13 +4,16 @@ import org.ucm.tp1.p1.logic.Game;
 import java.util.Random; 
 
 public class Vampire {
+	
+	public static final int SPEED=2;
+	
 	private int x,y;
 	private int life;
-	private Game game;
 	private int damage;
 	private int nextStep;
-	public static final int SPEED=2;
-	private int ciclosAlive;
+	
+	private Game game;
+	
 	Random rand;
 	
 	public Vampire(int x, int y,Game game) {
@@ -18,9 +21,26 @@ public class Vampire {
 		this.y=y;
 		this.life=5;
 		this.damage=1;
-		this.nextStep=y-1;
+		this.nextStep=SPEED-1;
 		this.game=game;
-		this.ciclosAlive = 0;
+		
+	}
+	
+	public Boolean isAlive() {
+		return(life>0);
+	}
+	
+	public void decreaseLife(int damage) {
+	life=life-damage;	
+	}
+	
+	public void avanza() {
+		
+		if(nextStep==0) {
+			this.y=y-1;
+			nextStep=SPEED;
+			}
+		nextStep--;
 		
 	}
 	
@@ -51,19 +71,7 @@ public class Vampire {
 	public void setDamage(int Damage) {
 		this.damage = Damage;
 	}
-	public Boolean isAlive() {
-		return(life>0);
-	}
-	public void decreaseLife(int damage) {
-	life=life-damage;	
-	}
-	public void avanza() {
-		ciclosAlive++;
-		if(ciclosAlive%SPEED==0) {
-		this.y=nextStep;
-		nextStep--;
-		}
-	}
+
 	public String toString() {
 		String full;
 		full="V ["+String.valueOf(life)+"]";
